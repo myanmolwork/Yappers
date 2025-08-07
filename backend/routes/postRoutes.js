@@ -5,15 +5,15 @@ const {
   getPosts,
   toggleLike,
   getMyPosts,
-  getUserPosts, // ✅ Add this
+  getUserPosts, 
 } = require('../controllers/postController');
 const { verifyToken } = require('../middleware/verifyToken');
 
-// ✅ Routes
+
 router.post('/', verifyToken, createPost);
 router.get('/', verifyToken, getPosts);
 router.get('/mine', verifyToken, getMyPosts);
-router.get('/user', verifyToken, getUserPosts); // ✅ New route for another user's posts
+router.get('/user', verifyToken, getUserPosts); 
 router.post('/:postId/like', verifyToken, toggleLike);
 
 module.exports = router;

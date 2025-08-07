@@ -75,7 +75,7 @@ exports.login = async (req, res) => {
   }
 };
 
-// LOGOUT (Handled on frontend)
+// LOGOUT
 exports.logout = (req, res) => {
   res.status(200).json({ message: 'Logout successful' });
 };

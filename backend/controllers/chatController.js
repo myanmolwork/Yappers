@@ -5,7 +5,7 @@ exports.getChatHistory = async (req, res) => {
   let { otherUserId } = req.query;
 
   try {
-    // If the frontend sends a username, convert it to user ID
+   
     if (isNaN(otherUserId)) {
       const [user] = await db.promise().query(
         'SELECT id FROM users WHERE username = ?',

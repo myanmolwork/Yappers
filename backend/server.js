@@ -11,7 +11,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "*", // Change this to your frontend URL in production
+    origin: "*", 
     methods: ["GET", "POST"]
   }
 });
@@ -33,24 +33,24 @@ app.use("/api/chat", chatRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
 
-// Default route
+
 app.get("/", (req, res) => {
   res.send("Chat & Post App API is running...");
 });
 
-// Real-time chat logic
+
 let users = {};
 
 io.on("connection", (socket) => {
   console.log("🟢 New client connected:", socket.id);
 
-  // Register user
+ 
   socket.on("register", (userId) => {
     users[userId] = socket.id;
     console.log(`✅ User ${userId} registered with socket ${socket.id}`);
   });
 
-  // Handle sending messages
+
   socket.on("sendMessage", ({ senderId, receiverId, message }) => {
     console.log(`📨 Message from ${senderId} to ${receiverId}: ${message}`);
 
@@ -75,7 +75,7 @@ io.on("connection", (socket) => {
     );
   });
 
-  // Typing indicator
+
   socket.on("typing", ({ senderId, receiverId }) => {
     const receiverSocket = users[receiverId];
     if (receiverSocket) {
@@ -90,7 +90,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  // Handle disconnection
+ 
   socket.on("disconnect", () => {
     console.log("🔴 Client disconnected:", socket.id);
     for (const userId in users) {

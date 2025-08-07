@@ -1,4 +1,4 @@
-// middleware/verifyToken.js
+
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 
@@ -15,7 +15,7 @@ const verifyToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Must include `.id` here
+    req.user = decoded; 
     next();
   } catch (err) {
     console.error("Token verification failed:", err.message);

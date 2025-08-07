@@ -1,10 +1,10 @@
-// src/pages/UserProfile.js
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function UserProfile() {
-  const { id } = useParams(); // user id from URL
+  const { id } = useParams(); 
   const [user, setUser] = useState(null);
   const [error, setError] = useState('');
   const navigate = useNavigate();

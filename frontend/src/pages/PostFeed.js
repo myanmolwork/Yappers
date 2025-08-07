@@ -22,7 +22,7 @@ function PostFeed() {
       await axios.post(`http://localhost:5000/api/posts/${postId}/like`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      fetchPosts(); // Re-fetch posts to update like status
+      fetchPosts(); 
     } catch (err) {
       alert('Failed to toggle like');
     }

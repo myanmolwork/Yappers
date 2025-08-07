@@ -1,4 +1,4 @@
-// src/pages/UserPosts.js
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -20,7 +20,7 @@ function UserPosts() {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        const postData = res?.data?.posts ?? []; // fallback to empty array
+        const postData = res?.data?.posts ?? [];
         const name = res?.data?.username ?? 'Unknown';
 
         setPosts(postData);

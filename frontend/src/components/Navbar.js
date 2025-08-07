@@ -1,4 +1,4 @@
-// src/components/Navbar.js
+
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 

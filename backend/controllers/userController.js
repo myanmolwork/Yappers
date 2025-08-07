@@ -1,4 +1,4 @@
-// controllers/userController.js
+
 const db = require('../config/db');
 
 exports.getAllUsers = async (req, res) => {

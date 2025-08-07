@@ -1,4 +1,4 @@
-// src/App.js
+
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Chat from "./components/Chat";
@@ -9,11 +9,11 @@ import PostFeed from "./pages/PostFeed";
 import Home from "./pages/Home";
 import UsersList from "./components/UsersList";
 import UserPosts from "./pages/UserPosts";
-import UserProfile from "./pages/UserProfile"; // ⬅️ Import user profile page
+import UserProfile from "./pages/UserProfile"; 
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 
-// Reusable layout to show navbar with children components
+
 const LayoutWithNavbar = ({ children }) => (
   <>
     <Navbar />

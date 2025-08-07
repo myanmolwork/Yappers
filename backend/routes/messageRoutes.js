@@ -1,10 +1,10 @@
-// routes/messageRoutes.js
+
 const express = require('express');
 const router = express.Router();
 const { verifyToken } = require('../middleware/verifyToken');
 const db = require('../config/db');
 
-// ✅ Get messages between two users
+
 router.get('/:senderId/:receiverId', verifyToken, (req, res) => {
   const { senderId, receiverId } = req.params;
 
@@ -24,7 +24,7 @@ router.get('/:senderId/:receiverId', verifyToken, (req, res) => {
   });
 });
 
-// ✅ Send a new message
+
 router.post('/', verifyToken, (req, res) => {
   const { senderId, receiverId, message } = req.body;
 

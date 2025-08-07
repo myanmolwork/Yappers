@@ -4,13 +4,13 @@ const { getAllUsers } = require('../controllers/userController');
 const { verifyToken } = require('../middleware/verifyToken');
 const db = require('../config/db');
 
-// ✅ Get all users
+
 router.get('/', verifyToken, (req, res, next) => {
   console.log("🧪 Token decoded user:", req.user);
   next();
 }, getAllUsers);
 
-// ✅ Get user by name
+
 router.get('/by-name/:name', verifyToken, (req, res) => {
   const userName = req.params.name;
 
@@ -27,7 +27,7 @@ router.get('/by-name/:name', verifyToken, (req, res) => {
   });
 });
 
-// ✅ Get user by ID via /by-id/:id
+
 router.get('/by-id/:id', verifyToken, (req, res) => {
   const userId = req.params.id;
 
@@ -44,7 +44,7 @@ router.get('/by-id/:id', verifyToken, (req, res) => {
   });
 });
 
-// ✅ NEW: Get user by ID via /:id (what frontend expects)
+
 router.get('/:id', verifyToken, (req, res) => {
   const userId = req.params.id;
 

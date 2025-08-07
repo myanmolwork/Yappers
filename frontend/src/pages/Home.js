@@ -1,4 +1,4 @@
-// src/pages/Home.js
+
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -32,7 +32,7 @@ function Home() {
       await axios.post(`http://localhost:5000/api/posts/${postId}/like`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      fetchPosts(); // refresh
+      fetchPosts(); 
     } catch (err) {
       console.error("Like/unlike failed:", err);
       alert("Failed to like/unlike post.");

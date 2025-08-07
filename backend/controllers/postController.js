@@ -1,6 +1,6 @@
 const db = require('../config/db');
 
-// ✅ CREATE POST
+
 exports.createPost = async (req, res) => {
   const { content, image_url } = req.body;
   const userId = req.user.id;
@@ -17,7 +17,7 @@ exports.createPost = async (req, res) => {
   }
 };
 
-// ✅ GET ALL POSTS (FOR FEED)
+
 exports.getPosts = async (req, res) => {
   try {
     const [posts] = await db.promise().query(`
@@ -36,7 +36,6 @@ exports.getPosts = async (req, res) => {
   }
 };
 
-// ✅ GET MY POSTS (ONLY LOGGED-IN USER'S)
 exports.getMyPosts = async (req, res) => {
   const userId = req.user.id;
 
@@ -58,7 +57,7 @@ exports.getMyPosts = async (req, res) => {
   }
 };
 
-// ✅ NEW: GET POSTS OF SPECIFIC USER BY userId
+
 exports.getUserPosts = async (req, res) => {
   const { userId } = req.query;
 
@@ -85,7 +84,7 @@ exports.getUserPosts = async (req, res) => {
   }
 };
 
-// ✅ TOGGLE LIKE
+
 exports.toggleLike = async (req, res) => {
   const userId = req.user.id;
   const postId = req.params.postId;

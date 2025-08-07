@@ -1,4 +1,4 @@
-// src/components/Chat.js
+
 import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
@@ -28,7 +28,7 @@ function Chat() {
     .catch(() => alert("Please login again."));
   }, [token]);
 
-  // Fetch all users and create userMap
+
   useEffect(() => {
     axios.get('http://localhost:5000/api/users', {
       headers: { Authorization: `Bearer ${token}` }
