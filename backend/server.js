@@ -4,6 +4,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const socketIo = require("socket.io");
 const db = require("./config/db");
+const path = require("path");
 
 dotenv.config();
 
@@ -11,7 +12,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "*", 
+    origin: "*",
     methods: ["GET", "POST"]
   }
 });
@@ -24,32 +25,36 @@ app.use(express.json());
 const authRoutes = require("./routes/authRoutes");
 const postRoutes = require("./routes/postRoutes");
 const chatRoutes = require("./routes/chatRoutes");
-const userRoutes = require('./routes/userRoutes');
-const messageRoutes = require('./routes/messageRoutes');
+const userRoutes = require("./routes/userRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/chat", chatRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/messages', messageRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/messages", messageRoutes);
 
-
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   res.send("Chat & Post App API is running...");
 });
 
+// Serve frontend (AFTER API routes)
+app.use(express.static(path.join(__dirname, "build")));
 
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
+
+// Socket.io
 let users = {};
 
 io.on("connection", (socket) => {
   console.log("🟢 New client connected:", socket.id);
 
- 
   socket.on("register", (userId) => {
     users[userId] = socket.id;
     console.log(`✅ User ${userId} registered with socket ${socket.id}`);
   });
-
 
   socket.on("sendMessage", ({ senderId, receiverId, message }) => {
     console.log(`📨 Message from ${senderId} to ${receiverId}: ${message}`);
@@ -75,7 +80,6 @@ io.on("connection", (socket) => {
     );
   });
 
-
   socket.on("typing", ({ senderId, receiverId }) => {
     const receiverSocket = users[receiverId];
     if (receiverSocket) {
@@ -90,7 +94,6 @@ io.on("connection", (socket) => {
     }
   });
 
- 
   socket.on("disconnect", () => {
     console.log("🔴 Client disconnected:", socket.id);
     for (const userId in users) {
