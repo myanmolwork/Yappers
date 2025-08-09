@@ -4,7 +4,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const socketIo = require("socket.io");
 const db = require("./config/db");
-const path = require("path");
+
 
 dotenv.config();
 
@@ -38,12 +38,6 @@ app.get("/api", (req, res) => {
   res.send("Chat & Post App API is running...");
 });
 
-// Serve frontend (AFTER API routes)
-app.use(express.static(path.join(__dirname, "build")));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
-});
 
 // Socket.io
 let users = {};
