@@ -16,7 +16,7 @@ function Profile() {
 
     const fetchUser = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/auth/me', {
+        const res = await axios.get('https://yappers-yevm.onrender.com/api/auth/me', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUser(res.data.user);
@@ -29,7 +29,7 @@ function Profile() {
 
     const fetchUserPosts = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/posts/mine', {
+        const res = await axios.get('https://yappers-yevm.onrender.com/api/posts/mine', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setPosts(res.data || []);

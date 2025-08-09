@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 import axios from 'axios';
 import './Chat.css';
 
-const socket = io("http://localhost:5000");
+const socket = io("https://yappers-yevm.onrender.com");
 
 function Chat() {
   const [users, setUsers] = useState([]);
@@ -21,7 +21,7 @@ function Chat() {
 
   // Get current user
   useEffect(() => {
-    axios.get('http://localhost:5000/api/auth/me', {
+    axios.get('https://yappers-yevm.onrender.com/api/auth/me', {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(res => setUserId(res.data.user.id))
@@ -30,7 +30,7 @@ function Chat() {
 
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/users', {
+    axios.get('https://yappers-yevm.onrender.com/api/users', {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(res => {
@@ -48,7 +48,7 @@ function Chat() {
 
     socket.emit("register", userId);
 
-    axios.get(`http://localhost:5000/api/messages/${userId}/${receiverId}`, {
+    axios.get(`https://yappers-yevm.onrender.com/api/messages/${userId}/${receiverId}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(res => setChat(res.data))

@@ -11,7 +11,7 @@ function UserProfile() {
   const token = localStorage.getItem('token');
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/users/by-id/${id}`, {
+    axios.get(`https://yappers-yevm.onrender.com/api/users/by-id/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => {

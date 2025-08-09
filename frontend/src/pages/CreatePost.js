@@ -9,7 +9,7 @@ function CreatePost({ onPostCreated }) {
     e.preventDefault();
     const token = localStorage.getItem('token');
     try {
-      await axios.post('http://localhost:5000/api/posts', {
+      await axios.post('https://yappers-yevm.onrender.com/api/posts', {
         content,
         image_url
       }, {

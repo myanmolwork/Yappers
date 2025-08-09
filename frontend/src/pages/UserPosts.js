@@ -16,7 +16,7 @@ function UserPosts() {
       setLoading(true);
       setError('');
       try {
-        const res = await axios.get(`http://localhost:5000/api/posts/user?userId=${userId}`, {
+        const res = await axios.get(`https://yappers-yevm.onrender.com/api/posts/user?userId=${userId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

@@ -9,7 +9,7 @@ function UsersList() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/users', {
+    axios.get('https://yappers-yevm.onrender.com/api/users', {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => setUsers(res.data))

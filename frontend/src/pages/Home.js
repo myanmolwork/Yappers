@@ -11,7 +11,7 @@ function Home() {
 
   const fetchPosts = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/posts', {
+      const res = await axios.get('https://yappers-yevm.onrender.com/api/posts', {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -29,7 +29,7 @@ function Home() {
 
   const toggleLike = async (postId) => {
     try {
-      await axios.post(`http://localhost:5000/api/posts/${postId}/like`, {}, {
+      await axios.post(`https://yappers-yevm.onrender.com/api/posts/${postId}/like`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchPosts(); 
