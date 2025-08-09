@@ -5,20 +5,20 @@ const dotenv = require("dotenv");
 const socketIo = require("socket.io");
 const db = require("./config/db");
 
-
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  }
-});
 
-// Middleware
-app.use(cors());
+// Configure CORS for Express
+const corsOptions = {
+  origin: "https://rest.nisha1.com", // your frontend URL
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true, // allow cookies and auth headers
+};
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // handle preflight requests
+
 app.use(express.json());
 
 // Routes
@@ -38,8 +38,16 @@ app.get("/api", (req, res) => {
   res.send("Chat & Post App API is running...");
 });
 
+// Configure Socket.IO with CORS options matching Express
+const io = socketIo(server, {
+  cors: {
+    origin: "https://rest.nisha1.com",
+    methods: ["GET", "POST"],
+    credentials: true,
+  }
+});
 
-// Socket.io
+// Socket.io logic
 let users = {};
 
 io.on("connection", (socket) => {
