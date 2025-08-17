@@ -1,6 +1,5 @@
-
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Chat from "./components/Chat";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -13,7 +12,6 @@ import UserProfile from "./pages/UserProfile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 
-
 const LayoutWithNavbar = ({ children }) => (
   <>
     <Navbar />
@@ -25,9 +23,19 @@ function App() {
   return (
     <Router>
       <Routes>
+        
+        {/* Default route: if token exists, go to /home, otherwise show Login */}
+        <Route 
+          path="/" 
+          element={
+            localStorage.getItem("token") ? (
+              <Navigate to="/home" replace />
+            ) : (
+              <Login />
+            )
+          }
+        />
 
-        {/* Public Routes (No Navbar) */}
-        <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
         {/* Protected Routes (With Navbar) */}

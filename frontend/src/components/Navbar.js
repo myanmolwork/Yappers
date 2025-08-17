@@ -1,10 +1,10 @@
-
-import React from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
-  const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -12,23 +12,60 @@ const Navbar = () => {
     navigate('/');
   };
 
-  const isActive = (path) => location.pathname === path;
+  useEffect(() => {
+    // Function to check mobile size
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    // Set event listener
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const navItems = [
-    { to: '/home', label: 'Home' },
-    { to: '/users', label: 'Users' },
-    { to: '/feed', label: 'Feed' },
-    { to: '/chat', label: 'Chat' },
-    { to: '/profile', label: 'Profile' },
+    { to: '/home', text: 'Home', icon: '🏠' },
+    { to: '/users', text: 'Users', icon: '👥' },
+    { to: '/feed', text: 'Feed', icon: '📰' },
+    { to: '/chat', text: 'Chat', icon: '💬' },
+    { to: '/profile', text: 'Profile', icon: '👤' },
   ];
 
+  const isActive = (path) => location.pathname === path;
+
+  // Mobile Bottom Navbar
+  if (isMobile) {
+    return (
+      <nav style={styles.bottomNavbar}>
+        {navItems.map(item => (
+          <Link
+            key={item.to}
+            to={item.to}
+            style={{
+              ...styles.bottomIcon,
+              ...(isActive(item.to) ? styles.activeBottomIcon : {}),
+            }}
+          >
+            {item.icon}
+          </Link>
+        ))}
+        <button onClick={handleLogout} style={{ ...styles.bottomIcon, color: '#e74c3c' }}>
+          🚪
+        </button>
+      </nav>
+    );
+  }
+
+  // Desktop Top Navbar
   return (
-    <nav style={styles.navbar}>
+    <nav style={styles.topNavbar}>
       <div style={styles.left}>
         <Link to="/home" style={styles.logo}>💬 Yappers</Link>
       </div>
       <div style={styles.right}>
-        {navItems.map((item) => (
+        {navItems.map(item => (
           <Link
             key={item.to}
             to={item.to}
@@ -37,7 +74,7 @@ const Navbar = () => {
               ...(isActive(item.to) ? styles.activeLink : {}),
             }}
           >
-            {item.label}
+            {item.text}
           </Link>
         ))}
         <button
@@ -54,7 +91,7 @@ const Navbar = () => {
 };
 
 const styles = {
-  navbar: {
+  topNavbar: {
     backgroundColor: '#1f1f1f',
     color: '#fff',
     padding: '14px 28px',
@@ -67,12 +104,12 @@ const styles = {
     zIndex: 1000,
     boxShadow: '0 3px 6px rgba(0, 0, 0, 0.2)',
   },
+  left: {},
   logo: {
     fontWeight: 'bold',
     fontSize: '24px',
     textDecoration: 'none',
     color: '#fff',
-    fontFamily: 'Segoe UI, sans-serif',
   },
   right: {
     display: 'flex',
@@ -86,7 +123,7 @@ const styles = {
     fontSize: '16px',
     padding: '6px 12px',
     borderRadius: '6px',
-    transition: 'all 0.3s ease',
+    transition: 'all 0.3s',
   },
   activeLink: {
     backgroundColor: '#333',
@@ -101,6 +138,32 @@ const styles = {
     cursor: 'pointer',
     fontSize: '15px',
     transition: 'background-color 0.3s',
+  },
+
+  // bottom nav styles
+  bottomNavbar: {
+    position: 'fixed',
+    bottom: 0,
+    width: '100%',
+    backgroundColor: '#1f1f1f',
+    display: 'flex',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    padding: '10px 0',
+    zIndex: 1000,
+    boxShadow: '0 -2px 6px rgba(0,0,0,0.3)',
+  },
+  bottomIcon: {
+    fontSize: '24px',
+    color: '#bbb',
+    textDecoration: 'none',
+    transition: 'color 0.3s',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+  },
+  activeBottomIcon: {
+    color: '#fff',
   },
 };
 
