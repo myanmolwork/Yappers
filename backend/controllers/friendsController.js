@@ -1,13 +1,13 @@
 // backend/controllers/friendsController.js
-const db = require('../config/db'); // your MySQL connection
+const db = require('../config/db');
 
-// Send friend request
+// -------------------- Send Friend Request --------------------
 exports.sendRequest = (req, res) => {
   const requesterId = req.user.id;
   const { userId } = req.params;
 
   if (requesterId === parseInt(userId)) {
-    return res.status(400).json({ message: "You cannot send request to yourself" });
+    return res.status(400).json({ message: "You cannot send a request to yourself" });
   }
 
   db.query(
@@ -16,9 +16,8 @@ exports.sendRequest = (req, res) => {
     (err, results) => {
       if (err) {
         console.error("DB Error in sendRequest SELECT:", err);
-        return res.status(500).json({ message: "DB error", error: err });
+        return res.status(500).json({ message: "Database error", error: err });
       }
-
       if (results.length > 0) return res.status(400).json({ message: "Friend request already sent" });
 
       db.query(
@@ -36,7 +35,7 @@ exports.sendRequest = (req, res) => {
   );
 };
 
-// Accept friend request
+// -------------------- Accept Friend Request --------------------
 exports.acceptRequest = (req, res) => {
   const userId = req.user.id;
   const { requesterId } = req.params;
@@ -47,9 +46,8 @@ exports.acceptRequest = (req, res) => {
     (err, results) => {
       if (err) {
         console.error("DB Error in acceptRequest SELECT:", err);
-        return res.status(500).json({ message: "DB error", error: err });
+        return res.status(500).json({ message: "Database error", error: err });
       }
-
       if (!results.length) return res.status(404).json({ message: "No pending request found" });
 
       db.query(
@@ -67,7 +65,7 @@ exports.acceptRequest = (req, res) => {
   );
 };
 
-// Decline friend request
+// -------------------- Decline Friend Request --------------------
 exports.declineRequest = (req, res) => {
   const userId = req.user.id;
   const { requesterId } = req.params;
@@ -78,9 +76,8 @@ exports.declineRequest = (req, res) => {
     (err, results) => {
       if (err) {
         console.error("DB Error in declineRequest SELECT:", err);
-        return res.status(500).json({ message: "DB error", error: err });
+        return res.status(500).json({ message: "Database error", error: err });
       }
-
       if (!results.length) return res.status(404).json({ message: "No pending request found" });
 
       db.query(
@@ -98,62 +95,63 @@ exports.declineRequest = (req, res) => {
   );
 };
 
-// Get all friends
+// -------------------- Get All Friends --------------------
 exports.getFriends = (req, res) => {
   const userId = req.user.id;
 
-  db.query(
-    `SELECT DISTINCT u.id, u.username
-     FROM users u
-     JOIN friend_requests f
-       ON (u.id = f.requester_id OR u.id = f.requested_id)
-     WHERE (f.requester_id=? OR f.requested_id=?)
-       AND f.status='accepted'
-       AND u.id != ?`,
-    [userId, userId, userId],
-    (err, results) => {
-      if (err) {
-        console.error("DB Error in getFriends:", err);
-        return res.status(500).json({ message: "Error fetching friends", error: err });
-      }
-      res.json({ success: true, friends: results });
+  const query = `
+    SELECT u.id, u.username
+    FROM users u
+    WHERE u.id IN (
+      SELECT CASE
+        WHEN requester_id = ? THEN requested_id
+        ELSE requester_id
+      END AS friend_id
+      FROM friend_requests
+      WHERE (requester_id = ? OR requested_id = ?) AND status='accepted'
+    )
+  `;
+
+  db.query(query, [userId, userId, userId], (err, results) => {
+    if (err) {
+      console.error("DB Error in getFriends:", err);
+      return res.status(500).json({ message: "Error fetching friends", error: err });
     }
-  );
+    res.json({ success: true, friends: results.length ? results : [] });
+  });
 };
 
-// Get pending friend requests
+// -------------------- Get Pending Friend Requests --------------------
 exports.getPendingRequests = (req, res) => {
   const userId = req.user.id;
 
-  db.query(
-    `SELECT f.requester_id, u.username
-     FROM friend_requests f
-     JOIN users u ON f.requester_id = u.id
-     WHERE f.requested_id=? AND f.status='pending'`,
-    [userId],
-    (err, results) => {
-      if (err) {
-        console.error("DB Error in getPendingRequests:", err);
-        return res.status(500).json({ message: "Error fetching pending requests", error: err });
-      }
-      res.json({ success: true, pendingRequests: results });
+  const query = `
+    SELECT f.requester_id, u.username
+    FROM friend_requests f
+    JOIN users u ON f.requester_id = u.id
+    WHERE f.requested_id = ? AND f.status='pending'
+  `;
+
+  db.query(query, [userId], (err, results) => {
+    if (err) {
+      console.error("DB Error in getPendingRequests:", err);
+      return res.status(500).json({ message: "Error fetching pending requests", error: err });
     }
-  );
+    res.json({ success: true, pendingRequests: results.length ? results : [] });
+  });
 };
 
-// Get all users (for "Add Friend" list)
+// -------------------- Get All Users for Add Friend List --------------------
 exports.getAllUsers = (req, res) => {
   const userId = req.user.id;
 
-  db.query(
-    "SELECT id, username FROM users WHERE id != ?",
-    [userId],
-    (err, results) => {
-      if (err) {
-        console.error("DB Error in getAllUsers:", err);
-        return res.status(500).json({ message: "Error fetching all users", error: err });
-      }
-      res.json({ success: true, users: results });
+  const query = "SELECT id, username FROM users WHERE id != ?";
+
+  db.query(query, [userId], (err, results) => {
+    if (err) {
+      console.error("DB Error in getAllUsers:", err);
+      return res.status(500).json({ message: "Error fetching all users", error: err });
     }
-  );
+    res.json({ success: true, users: results.length ? results : [] });
+  });
 };
