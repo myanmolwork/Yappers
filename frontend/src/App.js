@@ -5,7 +5,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import PostFeed from "./pages/PostFeed";
-import Home from "./pages/Home";// updated
+import Home from "./pages/Home";
 import UserPosts from "./pages/UserPosts";
 import UserProfile from "./pages/UserProfile"; 
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -20,22 +20,20 @@ const LayoutWithNavbar = ({ children }) => (
 );
 
 function App() {
+  const token = localStorage.getItem("token");
+
   return (
     <Router>
       <Routes>
+        {/* Default route */}
         <Route 
           path="/" 
-          element={
-            localStorage.getItem("token") ? (
-              <Navigate to="/home" replace />
-            ) : (
-              <Login />
-            )
-          }
+          element={token ? <Navigate to="/home" replace /> : <Login />}
         />
 
         <Route path="/register" element={<Register />} />
 
+        {/* Home */}
         <Route
           path="/home"
           element={
@@ -47,6 +45,7 @@ function App() {
           }
         />
 
+        {/* Profile */}
         <Route
           path="/profile"
           element={
@@ -58,6 +57,7 @@ function App() {
           }
         />
 
+        {/* Chat */}
         <Route
           path="/chat"
           element={
@@ -69,6 +69,7 @@ function App() {
           }
         />
 
+        {/* Feed */}
         <Route
           path="/feed"
           element={
@@ -80,18 +81,19 @@ function App() {
           }
         />
 
-        {/* Updated route for friends list */}
+        {/* Friends */}
         <Route
           path="/friends"
           element={
             <ProtectedRoute>
               <LayoutWithNavbar>
-                <Friends />
+                <Friends token={token} />
               </LayoutWithNavbar>
             </ProtectedRoute>
           }
         />
 
+        {/* User posts */}
         <Route
           path="/user/:userId/posts"
           element={
@@ -103,6 +105,7 @@ function App() {
           }
         />
 
+        {/* User profile */}
         <Route
           path="/user/:id"
           element={

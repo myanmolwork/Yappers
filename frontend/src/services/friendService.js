@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// Use your deployed API link directly
+// Base API URL
 const API = "https://yappers-yevm.onrender.com/api/friends";
 
 const axiosInstance = axios.create({
@@ -60,5 +60,15 @@ export const getPendingRequests = async (token) => {
     return res.data;
   } catch (err) {
     throw err.response?.data || { message: "Error fetching pending requests" };
+  }
+};
+
+// Get all users (for "Add Friend" feature)
+export const getAllUsers = async (token) => {
+  try {
+    const res = await axiosInstance.get("/all", authHeader(token));
+    return res.data;
+  } catch (err) {
+    throw err.response?.data || { message: "Error fetching all users" };
   }
 };

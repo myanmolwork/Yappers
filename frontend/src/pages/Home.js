@@ -80,7 +80,7 @@ function Home() {
               <p style={styles.noPosts}>Be the first to share something amazing!</p>
               <button 
                 style={styles.createPostBtn}
-                onClick={() => navigate('/create-post')}
+                onClick={() => navigate('/feed')}
               >
                 Create First Post
               </button>
