@@ -1,13 +1,13 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
+import { getFriends } from '../services/friendService';
 import axios from 'axios';
 import './Chat.css';
 
 const socket = io("https://yappers-yevm.onrender.com");
 
 function Chat() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]); // friends only
   const [userMap, setUserMap] = useState({});
   const [userId, setUserId] = useState('');
   const [receiverId, setReceiverId] = useState('');
@@ -28,18 +28,18 @@ function Chat() {
     .catch(() => alert("Please login again."));
   }, [token]);
 
-
+  // Fetch only friends
   useEffect(() => {
-    axios.get('https://yappers-yevm.onrender.com/api/users', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    .then(res => {
-      setUsers(res.data);
-      const map = {};
-      res.data.forEach(u => map[u.id] = u.username);
-      setUserMap(map);
-    })
-    .catch(() => alert("Failed to load users"));
+    if (!token) return;
+
+    getFriends(token)
+      .then(res => {
+        setUsers(res);
+        const map = {};
+        res.forEach(u => map[u.id] = u.username);
+        setUserMap(map);
+      })
+      .catch(() => alert("Failed to load friends"));
   }, [token]);
 
   // Register socket and fetch chat
@@ -118,7 +118,7 @@ function Chat() {
     <div className="container mt-4">
       <h3 className="text-center mb-3">Live Chat 💬</h3>
 
-      {/* Select user */}
+      {/* Select friend */}
       <div className="row mb-3">
         <div className="col-md-6 offset-md-3">
           <select
@@ -126,8 +126,8 @@ function Chat() {
             value={receiverId}
             onChange={(e) => setReceiverId(e.target.value)}
           >
-            <option value="">Select a user to chat with</option>
-            {users.filter(u => u.id !== userId).map(u => (
+            <option value="">Select a friend to chat with</option>
+            {users.map(u => (
               <option key={u.id} value={u.id}>
                 {u.username}
               </option>

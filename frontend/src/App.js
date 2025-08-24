@@ -5,12 +5,12 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import PostFeed from "./pages/PostFeed";
-import Home from "./pages/Home";
-import UsersList from "./components/UsersList";
+import Home from "./pages/Home";// updated
 import UserPosts from "./pages/UserPosts";
 import UserProfile from "./pages/UserProfile"; 
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
+import Friends from "./pages/Friends";
 
 const LayoutWithNavbar = ({ children }) => (
   <>
@@ -23,8 +23,6 @@ function App() {
   return (
     <Router>
       <Routes>
-        
-        {/* Default route: if token exists, go to /home, otherwise show Login */}
         <Route 
           path="/" 
           element={
@@ -38,7 +36,6 @@ function App() {
 
         <Route path="/register" element={<Register />} />
 
-        {/* Protected Routes (With Navbar) */}
         <Route
           path="/home"
           element={
@@ -49,6 +46,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/profile"
           element={
@@ -59,6 +57,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/chat"
           element={
@@ -69,6 +68,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/feed"
           element={
@@ -79,16 +79,19 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Updated route for friends list */}
         <Route
-          path="/users"
+          path="/friends"
           element={
             <ProtectedRoute>
               <LayoutWithNavbar>
-                <UsersList />
+                <Friends />
               </LayoutWithNavbar>
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/user/:userId/posts"
           element={
@@ -99,6 +102,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/user/:id"
           element={
@@ -109,7 +113,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
       </Routes>
     </Router>
   );
